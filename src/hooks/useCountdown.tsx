@@ -28,10 +28,11 @@ export function useCountdown() {
     
     setIsRunning(true);
     const startTime = Date.now();
-    setTargetTime(startTime + timeLeft);
+    const newTargetTime = startTime + timeLeft;
+    setTargetTime(newTargetTime);
     
     intervalRef.current = window.setInterval(() => {
-      const currentTimeLeft = targetTime - Date.now();
+      const currentTimeLeft = newTargetTime - Date.now();
       
       if (currentTimeLeft <= 0) {
         setTimeLeft(0);
