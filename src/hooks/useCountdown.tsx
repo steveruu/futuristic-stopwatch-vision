@@ -134,7 +134,7 @@ export function useCountdown() {
             clearInterval(intervalRef.current);
         }
         setIsRunning(false);
-        setTimeLeft(initialDuration); // Reset to the last set duration
+        setTimeLeft(0); // Reset to zero - UX
         endTimeRef.current = null;
         localStorage.removeItem("countdownEndTimeUnix");
         localStorage.removeItem("countdownPausedTimeLeft");

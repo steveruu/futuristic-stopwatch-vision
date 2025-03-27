@@ -45,12 +45,67 @@ const Index = () => {
         setTime,
     } = useCountdown();
 
-    // Realtime clock state - destructure timeParts
-    const {
-        timeParts, // Get timeParts instead of formattedRealtime
-        is24Hour,
-        toggleFormat,
-    } = useRealtime();
+    // Realtime clock state
+    const { timeParts, is24Hour, toggleFormat } = useRealtime();
+
+    // Helper function to parse time string into minutes and seconds
+    const parseTimeString = (
+        timeString: string
+    ): { minutes: number; seconds: number } => {
+        const [minutesStr, secondsStr] = timeString.split(":");
+        const seconds = parseInt(secondsStr);
+        return {
+            minutes: parseInt(minutesStr),
+            seconds: isNaN(seconds) ? 0 : seconds,
+        };
+    };
+
+    // Handlers for countdown time adjustment
+    const handleIncrementMinutes = () => {
+        if (!isCountdownRunning) {
+            const { minutes, seconds } = parseTimeString(formattedTimeLeft);
+            if (minutes < 99) {
+                // Max 99 minutes
+                setTime(minutes + 1, seconds);
+            }
+        }
+    };
+
+    const handleDecrementMinutes = () => {
+        if (!isCountdownRunning) {
+            const { minutes, seconds } = parseTimeString(formattedTimeLeft);
+            if (minutes > 0) {
+                setTime(minutes - 1, seconds);
+            }
+        }
+    };
+
+    const handleIncrementSeconds = () => {
+        if (!isCountdownRunning) {
+            const { minutes, seconds } = parseTimeString(formattedTimeLeft);
+            if (seconds === 59) {
+                if (minutes < 99) {
+                    // Check if we can increment minutes
+                    setTime(minutes + 1, 0);
+                }
+            } else {
+                setTime(minutes, seconds + 1);
+            }
+        }
+    };
+
+    const handleDecrementSeconds = () => {
+        if (!isCountdownRunning) {
+            const { minutes, seconds } = parseTimeString(formattedTimeLeft);
+            if (seconds === 0) {
+                if (minutes > 0) {
+                    setTime(minutes - 1, 59);
+                }
+            } else {
+                setTime(minutes, seconds - 1);
+            }
+        }
+    };
 
     return (
         <div className="min-h-screen w-full flex flex-col items-center justify-center py-10 px-4 bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
@@ -121,6 +176,10 @@ const Index = () => {
                         <CountdownDisplay
                             time={formattedTimeLeft}
                             isRunning={isCountdownRunning}
+                            onIncrementMinutes={handleIncrementMinutes}
+                            onDecrementMinutes={handleDecrementMinutes}
+                            onIncrementSeconds={handleIncrementSeconds}
+                            onDecrementSeconds={handleDecrementSeconds}
                         />
 
                         {/* Countdown controls */}
@@ -130,7 +189,6 @@ const Index = () => {
                             onStart={startCountdown}
                             onPause={pauseCountdown}
                             onReset={resetCountdown}
-                            onSetTime={setTime}
                         />
                     </div>
                 </TabsContent>
