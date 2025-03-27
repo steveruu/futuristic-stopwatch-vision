@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Play, Pause, RotateCcw, Clock } from 'lucide-react';
+import { Play, Pause, RotateCcw, Clock, ArrowUp, ArrowDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface CountdownControlsProps {
@@ -21,20 +21,46 @@ const CountdownControls: React.FC<CountdownControlsProps> = ({
   onSetTime
 }) => {
   const [showTimeInput, setShowTimeInput] = useState(false);
-  const [minutes, setMinutes] = useState('');
-  const [seconds, setSeconds] = useState('');
+  const [minutes, setMinutes] = useState<number>(0);
+  const [seconds, setSeconds] = useState<number>(0);
 
   const handleTimeSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const mins = parseInt(minutes) || 0;
-    const secs = parseInt(seconds) || 0;
     
-    if (mins > 0 || secs > 0) {
-      onSetTime(mins, secs);
+    if (minutes > 0 || seconds > 0) {
+      onSetTime(minutes, seconds);
       setShowTimeInput(false);
-      setMinutes('');
-      setSeconds('');
+      setMinutes(0);
+      setSeconds(0);
     }
+  };
+
+  const incrementMinutes = () => {
+    setMinutes(prev => Math.min(99, prev + 1));
+  };
+
+  const decrementMinutes = () => {
+    setMinutes(prev => Math.max(0, prev - 1));
+  };
+
+  const incrementSeconds = () => {
+    setSeconds(prev => {
+      if (prev >= 59) {
+        incrementMinutes();
+        return 0;
+      }
+      return prev + 1;
+    });
+  };
+
+  const decrementSeconds = () => {
+    setSeconds(prev => {
+      if (prev <= 0 && minutes > 0) {
+        decrementMinutes();
+        return 59;
+      }
+      return Math.max(0, prev - 1);
+    });
   };
 
   return (
@@ -43,34 +69,65 @@ const CountdownControls: React.FC<CountdownControlsProps> = ({
         <form onSubmit={handleTimeSubmit} className="flex flex-col items-center gap-4 mt-6 w-full max-w-xs glassmorphic p-4 rounded-xl">
           <div className="text-sm font-mono uppercase text-muted-foreground mb-2">Set Countdown Time</div>
           
-          <div className="flex gap-2 w-full">
-            <div className="flex-1">
-              <label htmlFor="minutes" className="text-xs text-muted-foreground mb-1 block">Minutes</label>
-              <input
-                type="number"
-                id="minutes"
-                min="0"
-                max="99"
-                value={minutes}
-                onChange={(e) => setMinutes(e.target.value)}
-                className="w-full bg-black/30 border border-white/10 rounded px-3 py-2 font-mono text-lg focus:outline-none focus:ring-1 focus:ring-white/30"
-              />
+          <div className="flex gap-6 w-full justify-center">
+            {/* Minutes Input with arrows */}
+            <div className="flex flex-col items-center">
+              <button 
+                type="button"
+                onClick={incrementMinutes}
+                className="p-1 rounded-full hover:bg-white/10 transition-colors"
+                aria-label="Increase minutes"
+              >
+                <ArrowUp className="w-5 h-5" />
+              </button>
+              
+              <div className="flex flex-col relative">
+                <div className="text-center font-mono text-3xl py-2 px-3 w-20 bg-black/30 border border-white/10 rounded">
+                  {String(minutes).padStart(2, '0')}
+                </div>
+                <span className="text-xs text-muted-foreground mt-1 text-center">Minutes</span>
+              </div>
+              
+              <button 
+                type="button"
+                onClick={decrementMinutes}
+                className="p-1 rounded-full hover:bg-white/10 transition-colors"
+                aria-label="Decrease minutes"
+              >
+                <ArrowDown className="w-5 h-5" />
+              </button>
             </div>
-            <div className="flex-1">
-              <label htmlFor="seconds" className="text-xs text-muted-foreground mb-1 block">Seconds</label>
-              <input
-                type="number"
-                id="seconds" 
-                min="0"
-                max="59"
-                value={seconds}
-                onChange={(e) => setSeconds(e.target.value)}
-                className="w-full bg-black/30 border border-white/10 rounded px-3 py-2 font-mono text-lg focus:outline-none focus:ring-1 focus:ring-white/30"
-              />
+            
+            {/* Seconds Input with arrows */}
+            <div className="flex flex-col items-center">
+              <button 
+                type="button"
+                onClick={incrementSeconds}
+                className="p-1 rounded-full hover:bg-white/10 transition-colors"
+                aria-label="Increase seconds"
+              >
+                <ArrowUp className="w-5 h-5" />
+              </button>
+              
+              <div className="flex flex-col relative">
+                <div className="text-center font-mono text-3xl py-2 px-3 w-20 bg-black/30 border border-white/10 rounded">
+                  {String(seconds).padStart(2, '0')}
+                </div>
+                <span className="text-xs text-muted-foreground mt-1 text-center">Seconds</span>
+              </div>
+              
+              <button 
+                type="button"
+                onClick={decrementSeconds}
+                className="p-1 rounded-full hover:bg-white/10 transition-colors"
+                aria-label="Decrease seconds"
+              >
+                <ArrowDown className="w-5 h-5" />
+              </button>
             </div>
           </div>
           
-          <div className="flex gap-2 mt-2">
+          <div className="flex gap-2 mt-4">
             <button 
               type="submit" 
               className="px-4 py-2 glassmorphic rounded-lg hover:bg-white/10 transition-colors"
@@ -79,7 +136,11 @@ const CountdownControls: React.FC<CountdownControlsProps> = ({
             </button>
             <button 
               type="button" 
-              onClick={() => setShowTimeInput(false)}
+              onClick={() => {
+                setShowTimeInput(false);
+                setMinutes(0);
+                setSeconds(0);
+              }}
               className="px-4 py-2 glassmorphic rounded-lg hover:bg-white/10 transition-colors"
             >
               Cancel
