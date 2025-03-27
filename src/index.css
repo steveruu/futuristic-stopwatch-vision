@@ -1,97 +1,106 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --background: 0 0% 3%;
-    --foreground: 0 0% 98%;
+    :root {
+        --background: 240 10% 4%;
+        --foreground: 0 0% 98%;
 
-    --card: 0 0% 5%;
-    --card-foreground: 0 0% 98%;
+        --card: 240 10% 7%;
+        --card-foreground: 0 0% 98%;
 
-    --popover: 0 0% 3%;
-    --popover-foreground: 0 0% 98%;
+        --popover: 240 10% 4%;
+        --popover-foreground: 0 0% 98%;
 
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
+        --primary: 0 0% 98%;
+        --primary-foreground: 0 0% 9%;
 
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
+        --secondary: 240 5% 18%;
+        --secondary-foreground: 0 0% 98%;
 
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
+        --muted: 240 5% 18%;
+        --muted-foreground: 0 0% 63.9%;
 
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
+        --accent: 260 70% 65%;
+        --accent-foreground: 0 0% 98%;
 
-    --destructive: 0 0% 14.9%;
-    --destructive-foreground: 0 0% 98%;
+        --destructive: 0 62.8% 30.6%;
+        --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 20%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.9%;
+        --border: 240 5% 20%;
+        --input: 240 5% 18%;
+        --ring: 260 70% 65%;
 
-    --radius: 0.5rem;
-  }
+        --radius: 0.75rem;
+    }
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
+    * {
+        @apply border-border;
+    }
 
-  body {
-    @apply bg-background text-foreground;
-    font-feature-settings: "ss01", "ss02", "cv01", "cv02", "cv03";
-  }
+    body {
+        @apply bg-background text-foreground;
+        background-image: linear-gradient(
+            180deg,
+            hsl(var(--background)) 0%,
+            hsl(240, 10%, 8%) 100%
+        );
+        min-height: 100vh;
+        font-family: "Inter", sans-serif;
+        font-feature-settings: "ss01", "ss02", "cv01", "cv02", "cv03";
+    }
 
-  html {
-    @apply scroll-smooth;
-  }
+    html {
+        @apply scroll-smooth;
+    }
 }
 
 @layer components {
-  .glassmorphic {
-    @apply bg-black/40 backdrop-blur-md border border-white/10 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.3)];
-  }
-  
-  .control-button {
-    @apply w-14 h-14 md:w-16 md:h-16 flex items-center justify-center rounded-full 
-           glassmorphic text-foreground transition-all duration-300
-           hover:bg-white/15 active:scale-95 active:animate-button-press;
-  }
+    .glassmorphic {
+        @apply bg-black/30 backdrop-blur-lg border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)];
+    }
 
-  .progress-ring-circle {
-    transition: stroke-dashoffset 0.3s ease;
-    transform: rotate(-90deg);
-    transform-origin: 50% 50%;
-  }
+    .control-button {
+        @apply w-14 h-14 md:w-16 md:h-16 flex items-center justify-center rounded-full 
+           glassmorphic text-foreground transition-all duration-300
+           hover:bg-white/20 hover:shadow-[0_0_20px_5px_rgba(255,255,255,0.1)]
+           active:scale-95 active:animate-button-press;
+    }
+
+    .progress-ring-circle {
+        transition: stroke-dashoffset 0.3s ease;
+        transform: rotate(-90deg);
+        transform-origin: 50% 50%;
+    }
 }
 
 @layer utilities {
-  .text-glow-subtle {
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
-  }
-  
-  .text-glow-strong {
-    text-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
-  }
+    .text-glow-subtle {
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+    }
+
+    .text-glow-strong {
+        text-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
+    }
 }
 
 @font-face {
-  font-family: 'JetBrains Mono';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v18/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKxTOlOV.woff2) format('woff2');
+    font-family: "JetBrains Mono";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(https://fonts.gstatic.com/s/jetbrainsmono/v18/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKxTOlOV.woff2)
+        format("woff2");
 }
 
 @font-face {
-  font-family: 'JetBrains Mono';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v18/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8L6xTOlOV.woff2) format('woff2');
+    font-family: "JetBrains Mono";
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url(https://fonts.gstatic.com/s/jetbrainsmono/v18/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8L6xTOlOV.woff2)
+        format("woff2");
 }
